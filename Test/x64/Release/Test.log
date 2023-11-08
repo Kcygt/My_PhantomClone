@@ -1,0 +1,8 @@
+﻿  Source.cpp
+C:\Users\Koray\source\repos\PhantomClone\Test\Source.cpp(5,11): warning C4101: 'Board': unreferenced local variable
+  Generating code
+  2 of 2 functions (100.0%) were compiled.
+    1 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Test.vcxproj -> C:\Users\Koray\source\repos\PhantomClone\x64\Release\Test.exe
