@@ -90,7 +90,7 @@ double DAQBoard::AngleCalc(unsigned int value, float GearRatio, int check, bool 
 
 }
 
-double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofstream& angno, vector<double>& data)
+double PositionCalc(vector<unsigned int> ENCDAT, int check, vector<double>& data)
 {
 	float gearRatio[3];
 	double Position[3];
@@ -120,20 +120,6 @@ double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofs
 	angles[0] = Board1.AngleCalc(ENCDAT[2], gearRatio[0], check, base);// Calculate angles from encoder values
 	angles[1] = Board1.AngleCalc(ENCDAT[0], gearRatio[1], check, arm); // Calculate angles from encoder values
 	angles[2] = Board1.AngleCalc(ENCDAT[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
-
-	for (unsigned int channel = 0; channel < 3; channel++)
-	{
-
-		if (channel != 0)//this prevents the seperator being placed at the begining or end of the string
-		{
-			strg2 << " ";
-		}
-		strg2 << angles[channel];
-	}
-	msg2 = strg2.str();
-	strg2.str(""); //code to clear the stringstream
-
-	angno << msg2; //attempt with type string instead of int
 
 	// Pre Calculate Trig
 	sin[1] = std::sin(angles[0]);
@@ -167,31 +153,11 @@ double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofs
 		Position[2] = -z;
 	}*/
 
-	for (size_t i = 0; i < 3; ++i)
-	{
-		if (i != 0)//this prevents the seperator being placed at the begining or end of the string
-		{
-			strg << " ";
-		}
-		strg << Position[i];
-	}
-	msg = strg.str();
-	strg.str(""); //code to clear the stringstream
-
-	posno << msg; //attempt with type string instead of int
-
-	x = 0.0;
-	y = 0.0;
-	z = 0.0;
 	return 0;
 }
 
 int DAQBoard::forwardKinematic() {
-	const float length1 = 0.2175f; // 0.168 without thimble
-	const float length2 = 0.215f; 
-	const float length3 = 0.2175f; // 0.168 without thimble
-	const float phantomHeightDiff = 0.087f;
-	const float phantomYDisplacement = 0.035f; // (115.0f/1000.0f)/2.0f
+	
 	return 0;
 }
 

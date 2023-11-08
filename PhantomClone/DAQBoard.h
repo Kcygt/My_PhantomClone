@@ -12,8 +12,13 @@ class DAQBoard
 {
 	public:
 		
+		DAQBoard() {
+
+		}
+
 		int id;
-		int openBoard();
+		int openBoard();		
+		int calibration();
 		int closeBoard();
 		int readEncoder();		
 		int readEncoderwithtimestamp();
