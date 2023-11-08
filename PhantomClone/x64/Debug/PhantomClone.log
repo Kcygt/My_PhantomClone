@@ -1,3 +1,4 @@
 ﻿  DAQBoard.cpp
-C:\Users\Koray\source\repos\PhantomClone\PhantomClone\DAQBoard.cpp(26,6): warning C4101: 'a': unreferenced local variable
-  PhantomClone.vcxproj -> C:\Users\Koray\source\repos\PhantomClone\x64\Debug\PhantomClone.lib
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone\DAQBoard.cpp(120,14): error C3861: 'AngleCalc': identifier not found
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone\DAQBoard.cpp(121,14): error C3861: 'AngleCalc': identifier not found
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone\DAQBoard.cpp(122,14): error C3861: 'AngleCalc': identifier not found

@@ -1,1 +1,2 @@
-﻿  Test.vcxproj -> C:\Users\Koray\source\repos\PhantomClone\x64\Debug\Test.exe
+﻿PhantomClone.lib(DAQBoard.obj) : error LNK2005: "class DAQBoard Board" (?Board@@3VDAQBoard@@A) already defined in Source.obj
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\x64\Debug\Test.exe : fatal error LNK1169: one or more multiply defined symbols found
