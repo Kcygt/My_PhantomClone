@@ -5,7 +5,7 @@
 using namespace std;
 
 
-
+DAQBoard Board1;
 int DAQBoard::openBoard() {
 	int flag = S826_SystemOpen();
 	std::cout << "Opened the board" << std::endl;
@@ -90,14 +90,14 @@ double DAQBoard::AngleCalc(unsigned int value, float GearRatio, int check, bool 
 
 }
 
-double PositionCalc(vector<unsigned int> ENCDAT, int check, vector<double>& data)
+double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofstream& angno, vector<double>& data)
 {
-	float gearRatio[3] = {0.0, 0.0, 0.0};
-	double Position[3] = { 0.0, 0.0, 0.0 };
+	float gearRatio[3];
+	double Position[3];
 	double x, y, z;
-	double angles[3] = { 0.0, 0.0, 0.0 };
-	double sin[4] = { 0.0, 0.0, 0.0, 0.0 };
-	double cos[4] = { 0.0, 0.0, 0.0, 0.0 };
+	double angles[3];
+	double sin[4];
+	double cos[4];
 
 	const float length1 = 0.203f; // extra link lentgh (along z axis)
 	const float length2 = 0.215f; // parallel linkage length
@@ -117,11 +117,24 @@ double PositionCalc(vector<unsigned int> ENCDAT, int check, vector<double>& data
 	gearRatio[2] = 11.5f;
 
 	//modified angle calc from Guy's chai code
-	angles[0] = DAQBoard::AngleCalc(ENCDAT[2], gearRatio[0], check, base);// Calculate angles from encoder values
-	angles[1] = AngleCalc(ENCDAT[0], gearRatio[1], check, arm); // Calculate angles from encoder values
-	angles[2] = AngleCalc(ENCDAT[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
+	angles[0] = Board1.AngleCalc(ENCDAT[2], gearRatio[0], check, base);// Calculate angles from encoder values
+	angles[1] = Board1.AngleCalc(ENCDAT[0], gearRatio[1], check, arm); // Calculate angles from encoder values
+	angles[2] = Board1.AngleCalc(ENCDAT[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
 
-	
+	for (unsigned int channel = 0; channel < 3; channel++)
+	{
+
+		if (channel != 0)//this prevents the seperator being placed at the begining or end of the string
+		{
+			strg2 << " ";
+		}
+		strg2 << angles[channel];
+	}
+	msg2 = strg2.str();
+	strg2.str(""); //code to clear the stringstream
+
+	angno << msg2; //attempt with type string instead of int
+
 	// Pre Calculate Trig
 	sin[1] = std::sin(angles[0]);
 	sin[2] = std::sin(angles[1]);
@@ -154,7 +167,19 @@ double PositionCalc(vector<unsigned int> ENCDAT, int check, vector<double>& data
 		Position[2] = -z;
 	}*/
 
-	
+	for (size_t i = 0; i < 3; ++i)
+	{
+		if (i != 0)//this prevents the seperator being placed at the begining or end of the string
+		{
+			strg << " ";
+		}
+		strg << Position[i];
+	}
+	msg = strg.str();
+	strg.str(""); //code to clear the stringstream
+
+	posno << msg; //attempt with type string instead of int
+
 	x = 0.0;
 	y = 0.0;
 	z = 0.0;

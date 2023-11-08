@@ -17,9 +17,8 @@ class DAQBoard
 		int closeBoard();
 		int readEncoder();		
 		int readEncoderwithtimestamp();
-		double PositionCalc(vector<unsigned int> ENCDAT, int check, vector<double>& data);
+		double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofstream& angno, vector<double>& data);
 		double AngleCalc(unsigned int value, float GearRatio, int check, bool base);
 		int forwardKinematic();
-		
 
 };
