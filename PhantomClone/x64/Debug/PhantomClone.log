@@ -1,2 +1,4 @@
 ﻿  DAQBoard.cpp
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone\DAQBoard.cpp(258,9): warning C4101: 'Position': unreferenced local variable
+C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone\DAQBoard.cpp(324,39): warning C4305: 'initializing': truncation from 'double' to 'float'
   PhantomClone.vcxproj -> C:\Users\zs839395\Documents\GitHub\My_PhantomClone\x64\Debug\PhantomClone.lib

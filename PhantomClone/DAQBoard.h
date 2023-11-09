@@ -12,18 +12,18 @@ class DAQBoard
 {
 	public:
 		
-		DAQBoard() {
-
-		}
-
 		int id;
-		int openBoard();		
-		int calibration();
+		int openBoard();
 		int closeBoard();
-		int readEncoder();		
-		int readEncoderwithtimestamp();
-		double PositionCalc(vector<unsigned int> ENCDAT, int check, ofstream& posno, ofstream& angno, vector<double>& data);
+		int configuration(int check, uint boardNum);
+		int readEncoder(vector<unsigned int>& ENCDAT1, vector<unsigned int>& ENCDAT2);
+		int readEncoderwithtimestamp(vector<unsigned int>& ENCDAT1, vector<unsigned int>& ENCDAT2);
 		double AngleCalc(unsigned int value, float GearRatio, int check, bool base);
-		int forwardKinematic();
+		double PositionCalc(vector<unsigned int> ENCDAT, int check);		
+		double forwardKinematics(vector<unsigned int> ENCDAT, int check, double& x, double& y, double& z);
+		std::vector<std::vector<double>> Jacobian(vector<unsigned int> ENCDAT, float gearRatio[3],  int check);
+		
+		
+		int calibration(uint boardNum, int channel);
 
 };
