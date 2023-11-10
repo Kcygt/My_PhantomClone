@@ -122,12 +122,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\zs839395\Documents\GitHub\My_PhantomClone\PhantomClone;C:\Program Files %28x86%29\Sensoray\826\API;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Koray\Documents\GitHub\My_PhantomClone\PhantomClone;C:\Program Files %28x86%29\Sensoray\826\API;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\zs839395\Documents\GitHub\My_PhantomClone\x64\Debug;C:\Program Files (x86)\Sensoray\826\API\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Koray\Documents\GitHub\My_PhantomClone\x64\Debug;C:\Users\zs839395\Documents\GitHub\My_PhantomClone\x64\Debug;C:\Program Files (x86)\Sensoray\826\API\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhantomClone.lib;s826.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

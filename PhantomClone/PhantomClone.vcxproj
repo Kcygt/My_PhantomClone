@@ -142,7 +142,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Sensoray\826\API\x64;C:\Program Files %28x86%29\Sensoray\826\API\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Koray\Documents\GitHub\My_PhantomClone\PhantomClone\x64\Debug;C:\Program Files %28x86%29\Sensoray\826\API\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>s826.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

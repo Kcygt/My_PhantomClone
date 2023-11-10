@@ -15,7 +15,7 @@ using namespace std;
 DAQBoard Board1;
 int DAQBoard::openBoard() {
 	int id, flags = S826_SystemOpen();
-	uint boardNum;
+	uint boardNum=0;
 	if (flags < 0)
 		cout << "S826_SystemOpen returned error code " << flags << endl;
 	else if (flags == 0)
@@ -105,7 +105,7 @@ int DAQBoard::configuration(int check, uint boardNum)
 		//SetDacOutput(boardNum, ch, S826_DAC_SPAN_10_10, 0);
 		//SetDacOutput(boardNum, ch, S826_DAC_SPAN_5_5, 0);
 	}
-
+	std::cout << "Completed configuration" << std::endl;
 	return 0;
 }
 
@@ -252,13 +252,24 @@ double DAQBoard::PositionCalc(vector<unsigned int> ENCDAT, int check)
 	return 0;
 }
 
-double DAQBoard::forwardKinematics(vector<unsigned int> ENCDAT, int check, double& x, double& y, double& z)
+double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z1, double& x2, double& y2, double& z2)
 {
+	
+	vector<unsigned int> ENCDAT1;
+	vector<unsigned int> ENCDAT2;
+	ENCDAT1.clear();
+	ENCDAT2.clear();
+	Board1.readEncoder(ENCDAT1, ENCDAT2);
 	float gearRatio[3];
 	double Position[3];
-	double angles[3];
-	double sin[4];
-	double cos[4];
+	double angles1[3];
+	double sin1[4];
+	double cos1[4];
+	
+	double angles2[3];
+	double sin2[4];
+	double cos2[4];
+
 
 	const float length1 = 0.203f; // extra link lentgh (along z axis)
 	const float length2 = 0.215f; // parallel linkage length
@@ -275,23 +286,38 @@ double DAQBoard::forwardKinematics(vector<unsigned int> ENCDAT, int check, doubl
 	gearRatio[2] = 11.5f;
 
 	//modified angle calc from Guy's chai code
-	angles[0] = AngleCalc(ENCDAT[2], gearRatio[0], check, base);// Calculate angles from encoder values
-	angles[1] = AngleCalc(ENCDAT[0], gearRatio[1], check, arm); // Calculate angles from encoder values
-	angles[2] = AngleCalc(ENCDAT[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
+	angles1[0] = AngleCalc(ENCDAT1[2], gearRatio[0], check, base);// Calculate angles from encoder values
+	angles1[1] = AngleCalc(ENCDAT1[0], gearRatio[1], check, arm); // Calculate angles from encoder values
+	angles1[2] = AngleCalc(ENCDAT1[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
 
 	
-	// Pre Calculate Trig
-	sin[1] = std::sin(angles[0]);
-	sin[2] = std::sin(angles[1]);
-	sin[3] = std::sin(angles[2]);
-	cos[1] = std::cos(angles[0]);
-	cos[2] = std::cos(angles[1]);
-	cos[3] = std::cos(angles[2]);
+	angles2[0] = AngleCalc(ENCDAT2[2], gearRatio[0], check, base);// Calculate angles from encoder values
+	angles2[1] = AngleCalc(ENCDAT2[0], gearRatio[1], check, arm); // Calculate angles from encoder values
+	angles2[2] = AngleCalc(ENCDAT2[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
 
+	// Pre Calculate Trig
+	sin1[1] = std::sin(angles1[0]);
+	sin1[2] = std::sin(angles1[1]);
+	sin1[3] = std::sin(angles1[2]);
+	cos1[1] = std::cos(angles1[0]);
+	cos1[2] = std::cos(angles1[1]);
+	cos1[3] = std::cos(angles1[2]);
+
+	// Pre Calculate Trig
+	sin2[1] = std::sin(angles2[0]);
+	sin2[2] = std::sin(angles2[1]);
+	sin2[3] = std::sin(angles2[2]);
+	cos2[1] = std::cos(angles2[0]);
+	cos2[2] = std::cos(angles2[1]);
+	cos2[3] = std::cos(angles2[2]);
 	// Calculate Position
-	x = (cos[1] * ((length2 * cos[2]) + (length3 * sin[3])) - length2);
-	y = sin[1] * ((length2 * cos[2]) + (length3 * sin[3]));
-	z = length1 - (length3 * cos[3]) + (length2 * sin[2]);
+	x1 = (cos1[1] * ((length2 * cos1[2]) + (length3 * sin1[3])) - length2);
+	y1 = sin1[1] * ((length2 * cos1[2]) + (length3 * sin1[3]));
+	z1 = length1 - (length3 * cos1[3]) + (length2 * sin1[2]);
+
+	x2 = (cos2[1] * ((length2 * cos2[2]) + (length3 * sin2[3])) - length2);
+	y2 = sin2[1] * ((length2 * cos2[2]) + (length3 * sin2[3]));
+	z2 = length1 - (length3 * cos2[3]) + (length2 * sin2[2]);
 
 	//rotate co-ord frame to desired
 
