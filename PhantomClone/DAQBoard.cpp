@@ -271,9 +271,9 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	double cos2[4];
 
 
-	const float length1 = 0.203f; // extra link lentgh (along z axis)
+	const float length1 = 0.2175f; // extra link lentgh (along z axis)
 	const float length2 = 0.215f; // parallel linkage length
-	const float length3 = 0.203f; // end effector linkage
+	const float length3 = 0.2175f; // end effector linkage
 	const float phantomHeightDiff = 0.087f;
 	//	const float phantomYDisplacement = 0.035f; //added to lengths 1 & 2 so now obsolete (is thimble length)
 
@@ -310,6 +310,7 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	cos2[1] = std::cos(angles2[0]);
 	cos2[2] = std::cos(angles2[1]);
 	cos2[3] = std::cos(angles2[2]);
+
 	// Calculate Position
 	x1 = (cos1[1] * ((length2 * cos1[2]) + (length3 * sin1[3])) - length2);
 	y1 = sin1[1] * ((length2 * cos1[2]) + (length3 * sin1[3]));
