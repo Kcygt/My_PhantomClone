@@ -314,7 +314,7 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	cos2[3] = std::cos(angles2[2]);
 
 	// Calculate Position
-	x1 = sin1[1] * ((length2 * cos1[2] + length3 * sin1[3]);
+	x1 = sin1[1] * ((length2 * cos1[2] + length3 * sin1[3]));
 	y1 = length3 - length3 * cos1[3] + length2 * sin1[2];
 	z1 = -length2 + cos1[1] * (length2 * cos1[2] + length3 * sin1[3]);
 
@@ -346,10 +346,10 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	return 0.0;
 }
 
-double DAQBoard::inverseKinematics(int check, double x1, double y1, double z1, double x2, double y2, double z2, double& QL1, double& QL2, double& QL3, double& QR1, double& QR2, double& QR3)
+double DAQBoard::inverseKinematics(int check, double& QL1, double& QL2, double& QL3, double& QR1, double& QR2, double& QR3)
 {
-
-	
+	double x1, x2, y1, y2, z1, z2;
+	Board1.forwardKinematics(0,  x1, y1, z1, x2, y2, z2);
 	const float length1 = 0.108f; // extra link lentgh (along z axis)
 	const float length2 = 0.208f; // parallel linkage length
 	const float length3 = 0.168f; // end effector linkage
@@ -364,7 +364,7 @@ double DAQBoard::inverseKinematics(int check, double x1, double y1, double z1, d
 	Beta = atan2(y1-length3,R);
 	Gamma = acos( (pow(length2, 2) + pow(r, 2) - pow(length3, 2)) / (2 * length2 * r));
 
-	alpha = acos( (pow(length2, 2) * pow(length3, 2) - pow(r, 2)) / (2 * length2 * length3));
+	alpha = abs(acos( (pow(length2, 2) * pow(length3, 2) - pow(r, 2)) / 2 * length2 * length3));
 	
 	QL1 = atan2(x1, z1 + length2);
 	QL2 = Beta + Gamma;
@@ -383,9 +383,9 @@ std::vector<std::vector<double>> DAQBoard::Jacobian(vector<unsigned int> encoder
 	double cos[4];
 	bool base = true;
 	bool arm = false;
-	const float length1 = 0.2175f; //0.168 without thimble
-	const float length2 = 0.215f;
-	const float length3 = 0.2175f; //0.168 without thimble
+	const float length1 = 0.108f; //0.168 without thimble
+	const float length2 = 0.208f;
+	const float length3 = 0.168f; //0.168 without thimble
 	const float phantomHeightDiff = 0.087;
 	const float phantomYDisplacement = 0.035f; // (115.0f/1000.0f)/2.0f
 	double angles[3];
@@ -406,6 +406,25 @@ std::vector<std::vector<double>> DAQBoard::Jacobian(vector<unsigned int> encoder
 	J.push_back({ cos[1] * ((length2 * cos[2]) + (length3 * sin[3])), -length2 * sin[1] * sin[2], length3 * sin[1] * cos[3] });
 	J.push_back({ 0, length2 * cos[2], length3 * sin[3] });
 	
+
+	// Spatial Jacobian
+	//J.push_back({ length2, -length2 * sin[1] * sin[2], sin[1] * (length3 + length2 * sin[2]) });
+	//J.push_back({ 0      ,  length2 * cos[2]         , length2 * (cos[1] - cos[2]) });
+	//J.push_back({ 0      , -length2 * cos[1] * sin[2], cos[1]*(length3 + length2*sin[2]) });
+	//J.push_back({ 0      , 0                         , -cos[1] });
+	//J.push_back({ 1,0, 0 });
+	//J.push_back({ 0, 0, sin[1] });
+
+
+	// Body Jacobian
+	//J.push_back({ length2 * cos[2] + length3 * sin[3], 0,0 });
+	//J.push_back({ 0, length2 * std::cos(angles[1] - angles[2]), 0 });
+	//J.push_back({ 0, -length2 * std::sin(angles[1] - angles[2]),length3 });
+	//J.push_back({0,0,-1});
+	//J.push_back({cos[2],0 ,0});
+	//J.push_back({sin[2], 0, 0});
+
+
 	return J;
 }
 

@@ -17,7 +17,7 @@ int main()
 
 	for (int ii = 0; ii < 100000; ii++) {
 		Board.forwardKinematics( check, x1, y1, z1, x2, y2, z2);
-		Board.inverseKinematics(check, x1, y1, z1, x2, y2, z2, QL1, QL2, QL3, QR1, QR2, QR3);
+		Board.inverseKinematics(check,  QL1, QL2, QL3, QR1, QR2, QR3);
 		std::cout <<"Q1    :" << QL1 << "    Q2    :" << QL2 << "     Q3    :" << QL3 << std::endl;
 		//std::cout << "x1    :" << x1 << std::endl;
 	}
