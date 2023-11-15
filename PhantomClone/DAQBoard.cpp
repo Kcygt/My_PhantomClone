@@ -314,13 +314,17 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	cos2[3] = std::cos(angles2[2]);
 
 	// Calculate Position
-	x1 = (cos1[1] * ((length2 * cos1[2]) + (length3 * sin1[3])) - length2);
-	y1 = sin1[1] * ((length2 * cos1[2]) + (length3 * sin1[3]));
-	z1 = length3 - (length3 * cos1[3]) + (length2 * sin1[2]);
+	x1 = sin1[1] * ((length2 * cos1[2] + length3 * sin1[3]);
+	y1 = length3 - length3 * cos1[3] + length2 * sin1[2];
+	z1 = -length2 + cos1[1] * (length2 * cos1[2] + length3 * sin1[3]);
+
+	x2 = sin2[1] * ((length2 * cos2[2]) + (length3 * sin2[3]));
+	y2 = length3 - length3 * cos2[3] + length2 * sin2[2];
+	z2 = -length2 + cos2[1] * (length2 * cos2[2] + length3 * sin2[3]);
+
+
 	
-	x2 = (cos2[1] * ((length2 * cos2[2]) + (length3 * sin2[3])) - length2);
-	y2 = sin2[1] * ((length2 * cos2[2]) + (length3 * sin2[3]));
-	z2 = length3 - (length3 * cos2[3]) + (length2 * sin2[2]);
+	
 	
 	
 	//rotate co-ord frame to desired
@@ -342,65 +346,34 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	return 0.0;
 }
 
-double DAQBoard::inverseKinematics(int x1, int y1, int z1, int x2, int y2, int z2, double& Q1, double& Q2, double& Q3)
+double DAQBoard::inverseKinematics(int check, double x1, double y1, double z1, double x2, double y2, double z2, double& QL1, double& QL2, double& QL3, double& QR1, double& QR2, double& QR3)
 {
-	vector<unsigned int> ENCDAT1;
-	vector<unsigned int> ENCDAT2;
-	ENCDAT1.clear();
-	ENCDAT2.clear();
-	Board1.readEncoder(ENCDAT1, ENCDAT2);
-	float gearRatio[3];
-	double Position[3];
-	double angles1[3];
-	double sin1[4];
-	double cos1[4];
 
-	double angles2[3];
-	double sin2[4];
-	double cos2[4];
-
-
+	
 	const float length1 = 0.108f; // extra link lentgh (along z axis)
 	const float length2 = 0.208f; // parallel linkage length
 	const float length3 = 0.168f; // end effector linkage
 	const float phantomHeightDiff = 0.087f;
 	//	const float phantomYDisplacement = 0.035f; //added to lengths 1 & 2 so now obsolete (is thimble length)
 
-	//bools to crontol scalar values used for simulsolve method
-	bool base = true;
-	bool arm = false;
+	double R, r,  alpha, Beta, Gamma;
 
-	gearRatio[0] = 13.4f;
-	gearRatio[1] = 11.5f;
-	gearRatio[2] = 11.5f;
+	R = sqrt(pow(x1,2) + pow(z1+length2,2));
+	r = sqrt(pow(x1,2) + pow(y1-length3,2) + pow(z1+length2,2));
+	
+	Beta = atan2(y1-length3,R);
+	Gamma = acos( (pow(length2, 2) + pow(r, 2) - pow(length3, 2)) / (2 * length2 * r));
 
-	//modified angle calc from Guy's chai code
-	angles1[0] = AngleCalc(ENCDAT1[2], gearRatio[0], check, base);// Calculate angles from encoder values
-	angles1[1] = AngleCalc(ENCDAT1[0], gearRatio[1], check, arm); // Calculate angles from encoder values
-	angles1[2] = AngleCalc(ENCDAT1[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
+	alpha = acos( (pow(length2, 2) * pow(length3, 2) - pow(r, 2)) / (2 * length2 * length3));
+	
+	QL1 = atan2(x1, z1 + length2);
+	QL2 = Beta + Gamma;
+	QL3 = QL2 + alpha - PI/2;
+	
 
 
-	angles2[0] = AngleCalc(ENCDAT2[2], gearRatio[0], check, base);// Calculate angles from encoder values
-	angles2[1] = AngleCalc(ENCDAT2[0], gearRatio[1], check, arm); // Calculate angles from encoder values
-	angles2[2] = AngleCalc(ENCDAT2[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
-
-	// Pre Calculate Trig
-	sin1[1] = std::sin(angles1[0]);
-	sin1[2] = std::sin(angles1[1]);
-	sin1[3] = std::sin(angles1[2]);
-	cos1[1] = std::cos(angles1[0]);
-	cos1[2] = std::cos(angles1[1]);
-	cos1[3] = std::cos(angles1[2]);
-
-	// Pre Calculate Trig
-	sin2[1] = std::sin(angles2[0]);
-	sin2[2] = std::sin(angles2[1]);
-	sin2[3] = std::sin(angles2[2]);
-	cos2[1] = std::cos(angles2[0]);
-	cos2[2] = std::cos(angles2[1]);
-	cos2[3] = std::cos(angles2[2]);
-
-	return 0.0;
+	
+return 0.0;
 }
 
 
