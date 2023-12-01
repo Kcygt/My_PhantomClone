@@ -17,7 +17,7 @@ using namespace std;
 DAQBoard Board1;
 int DAQBoard::openBoard() {
 	int id, flags = S826_SystemOpen();
-	uint boardNum=0;
+	uint boardNum = 0;
 	if (flags < 0)
 		cout << "S826_SystemOpen returned error code " << flags << endl;
 	else if (flags == 0)
@@ -31,7 +31,7 @@ int DAQBoard::openBoard() {
 				boardNum = id;
 			}
 		}
-	
+
 	}
 	cout << "Using board: " << boardNum << endl;
 	return boardNum;
@@ -73,7 +73,7 @@ int DAQBoard::configuration(int check, uint boardNum)
 
 	}
 
-	
+
 	// Configure analog output
 	for (uint ch = 0; ch < 7; ++ch)
 	{
@@ -116,11 +116,11 @@ int DAQBoard::readEncoder(vector<unsigned int>& ENCDAT1, vector<unsigned int>& E
 
 	int boardNum = 0;
 	uint counts;
-	
+
 	for (uint ch = 0; ch < 6; ++ch)
 	{
 		S826_CounterRead(boardNum, ch, &counts);          // Fetch the current counts from counter 0.
-		if (ch <=2 )
+		if (ch <= 2)
 			ENCDAT1.push_back(counts);
 		else
 			ENCDAT2.push_back(counts);
@@ -133,15 +133,15 @@ int DAQBoard::readEncoderwithtimestamp(vector<unsigned int>& ENCDAT1, vector<uns
 	unsigned int counts[3] = { 0, 0, 0 };
 	unsigned int ctstamp = 0;
 	unsigned int reason = 0;
-		for (unsigned int channel = 3; channel < 6; channel++)
-		{
-			S826_CounterSnapshot(boardNum, channel); // Create Snapshot
-			S826_CounterSnapshotRead(boardNum, channel - 3, &counts[channel - 3], &ctstamp, &reason, 0); // Read from snapshot
-			ENCDAT1.push_back(counts[channel - 3]);
-			S826_CounterSnapshotRead(boardNum, channel, &counts[channel - 3], &ctstamp, &reason, 0); // Read from snapshot
-			ENCDAT2.push_back(counts[channel - 3]);
+	for (unsigned int channel = 3; channel < 6; channel++)
+	{
+		S826_CounterSnapshot(boardNum, channel); // Create Snapshot
+		S826_CounterSnapshotRead(boardNum, channel - 3, &counts[channel - 3], &ctstamp, &reason, 0); // Read from snapshot
+		ENCDAT1.push_back(counts[channel - 3]);
+		S826_CounterSnapshotRead(boardNum, channel, &counts[channel - 3], &ctstamp, &reason, 0); // Read from snapshot
+		ENCDAT2.push_back(counts[channel - 3]);
 
-		}
+	}
 	return 0;
 }
 
@@ -254,9 +254,9 @@ double DAQBoard::PositionCalc(vector<unsigned int> ENCDAT, int check)
 	return 0;
 }
 
-double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z1, double& x2, double& y2, double& z2)
+double DAQBoard::forwardKinematics(int check, double& x1, double& y1, double& z1, double& x2, double& y2, double& z2)
 {
-	
+
 	vector<unsigned int> ENCDAT1;
 	vector<unsigned int> ENCDAT2;
 	ENCDAT1.clear();
@@ -267,7 +267,7 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	double angles1[3];
 	double sin1[4];
 	double cos1[4];
-	
+
 	double angles2[3];
 	double sin2[4];
 	double cos2[4];
@@ -292,7 +292,7 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	angles1[1] = AngleCalc(ENCDAT1[0], gearRatio[1], check, arm); // Calculate angles from encoder values
 	angles1[2] = AngleCalc(ENCDAT1[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
 
-	
+
 	angles2[0] = AngleCalc(ENCDAT2[2], gearRatio[0], check, base);// Calculate angles from encoder values
 	angles2[1] = AngleCalc(ENCDAT2[0], gearRatio[1], check, arm); // Calculate angles from encoder values
 	angles2[2] = AngleCalc(ENCDAT2[1], gearRatio[2], check, arm); // Calculate angles from encoder values 
@@ -323,13 +323,13 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 	z2 = -length2 + cos2[1] * (length2 * cos2[2] + length3 * sin2[3]);
 
 
-	
-	
-	
-	
+
+
+
+
 	//rotate co-ord frame to desired
 
-	
+
 	/*if (check == 0)
 	{
 		Position[0] = x;
@@ -349,35 +349,35 @@ double DAQBoard::forwardKinematics( int check, double& x1, double& y1, double& z
 double DAQBoard::inverseKinematics(int check, double& QL1, double& QL2, double& QL3, double& QR1, double& QR2, double& QR3)
 {
 	double x1, x2, y1, y2, z1, z2;
-	Board1.forwardKinematics(0,  x1, y1, z1, x2, y2, z2);
+	Board1.forwardKinematics(0, x1, y1, z1, x2, y2, z2);
 	const float length1 = 0.108f; // extra link lentgh (along z axis)
 	const float length2 = 0.208f; // parallel linkage length
 	const float length3 = 0.168f; // end effector linkage
 	const float phantomHeightDiff = 0.087f;
 	//	const float phantomYDisplacement = 0.035f; //added to lengths 1 & 2 so now obsolete (is thimble length)
 
-	double R, r,  alpha, Beta, Gamma;
+	double R, r, alpha, Beta, Gamma;
 
-	R = sqrt(pow(x1,2) + pow(z1+length2,2));
-	r = sqrt(pow(x1,2) + pow(y1-length3,2) + pow(z1+length2,2));
-	
-	Beta = atan2(y1-length3,R);
-	Gamma = acos( (pow(length2, 2) + pow(r, 2) - pow(length3, 2)) / (2 * length2 * r));
+	R = sqrt(pow(x1, 2) + pow(z1 + length2, 2));
+	r = sqrt(pow(x1, 2) + pow(y1 - length3, 2) + pow(z1 + length2, 2));
 
-	alpha = abs(acos( (pow(length2, 2) * pow(length3, 2) - pow(r, 2)) / 2 * length2 * length3));
-	
+	Beta = atan2(y1 - length3, R);
+	Gamma = acos((pow(length2, 2) + pow(r, 2) - pow(length3, 2)) / (2 * length2 * r));
+
+	alpha = abs(acos((pow(length2, 2) * pow(length3, 2) - pow(r, 2)) / 2 * length2 * length3));
+
 	QL1 = atan2(x1, z1 + length2);
 	QL2 = Beta + Gamma;
-	QL3 = QL2 + alpha - PI/2;
-	
+	QL3 = QL2 + alpha - PI / 2;
 
 
-	
-return 0.0;
+
+
+	return 0.0;
 }
 
 
-std::vector<std::vector<double>> DAQBoard::Jacobian(vector<unsigned int> encoderValue, float gearRatio[3],  int check)
+std::vector<std::vector<double>> DAQBoard::Jacobian(vector<unsigned int> encoderValue, float gearRatio[3], int check)
 {
 	double sin[4];
 	double cos[4];
@@ -405,7 +405,7 @@ std::vector<std::vector<double>> DAQBoard::Jacobian(vector<unsigned int> encoder
 	J.push_back({ sin[1] * ((length2 * cos[2]) + (length3 * sin[3])), -length2 * cos[1] * sin[1], length3 * cos[1] * sin[3] });
 	J.push_back({ cos[1] * ((length2 * cos[2]) + (length3 * sin[3])), -length2 * sin[1] * sin[2], length3 * sin[1] * cos[3] });
 	J.push_back({ 0, length2 * cos[2], length3 * sin[3] });
-	
+
 
 	// Spatial Jacobian
 	//J.push_back({ length2, -length2 * sin[1] * sin[2], sin[1] * (length3 + length2 * sin[2]) });
@@ -438,5 +438,3 @@ int DAQBoard::calibration(uint boardNum, int channel)
 
 	return 0;
 }
-
-
